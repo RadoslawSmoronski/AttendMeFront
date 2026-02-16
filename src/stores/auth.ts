@@ -17,6 +17,7 @@ export const useAuthStore = defineStore('auth', () => {
       username.value = loginName
     } catch (error) {
       console.error('Store login error: ', error)
+      throw error
     }
   }
 

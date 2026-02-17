@@ -30,11 +30,18 @@ export const useAuthStore = defineStore('auth', () => {
     sessionStorage.removeItem('attend-me:userAuthData')
   }
 
+  function initialize() {
+    if (api.userTokenResult && api.userTokenResult.token) {
+      token.value = api.userTokenResult.token
+    }
+  }
+
   return {
     token,
     username,
     isAuthenticated,
     login,
     logout,
+    initialize,
   }
 })

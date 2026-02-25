@@ -17,6 +17,11 @@ const router = createRouter({
       component: HomeView,
       meta: { requiresAuth: true },
     },
+    {
+      path: '/session/:id',
+      name: 'session-details',
+      component: () => import('../views/SessionDetailsView.vue'),
+    },
   ],
 })
 

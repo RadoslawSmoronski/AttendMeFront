@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'session-details',
       component: () => import('../views/SessionDetailsView.vue'),
     },
+    {
+      path: '/scanner/:id',
+      name: 'scanner',
+      component: () => import('../views/ScannerView.vue'),
+    },
   ],
 })
 

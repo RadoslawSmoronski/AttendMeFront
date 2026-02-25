@@ -150,8 +150,7 @@ const formatTimeOnly = (val: string) => {
 }
 
 const goToQrScreen = () => {
-  // redirect to QR soon
-  alert('Task #12 - coming soon')
+  router.push(`/scanner/${sId}`)
 }
 
 onMounted(() => {

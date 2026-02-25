@@ -8,9 +8,12 @@ export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(null)
   const firstName = ref<string>('')
   const lastName = ref<string>('')
+  const isTeacher = ref<boolean | null>(null)
 
   // Getters
   const isAuthenticated = computed(() => !!token.value)
+
+  const isLecturer = computed(() => isTeacher.value === true)
 
   // Actions
   async function login(loginName: string, password: string) {
@@ -23,9 +26,11 @@ export const useAuthStore = defineStore('auth', () => {
 
         firstName.value = user.name || ''
         lastName.value = user.surname || ''
+        isTeacher.value = !!user.isTeacher
 
         sessionStorage.setItem('attend-me:fname', firstName.value)
         sessionStorage.setItem('attend-me:lname', lastName.value)
+        sessionStorage.setItem('attend-me:isTeacher', JSON.stringify(isTeacher.value))
       }
     } catch (error) {
       console.error('Login process failed:', error)
@@ -37,12 +42,14 @@ export const useAuthStore = defineStore('auth', () => {
     token.value = null
     firstName.value = ''
     lastName.value = ''
+    isTeacher.value = null
 
     api.userTokenResult = undefined
 
     sessionStorage.removeItem('attend-me:fname')
     sessionStorage.removeItem('attend-me:lname')
     sessionStorage.removeItem('attend-me:userAuthData')
+    sessionStorage.removeItem('attend-me:isTeacher')
   }
 
   function initialize() {
@@ -52,15 +59,19 @@ export const useAuthStore = defineStore('auth', () => {
 
     const savedFname = sessionStorage.getItem('attend-me:fname')
     const savedLname = sessionStorage.getItem('attend-me:lname')
+    const savedRole = sessionStorage.getItem('attend-me:isTeacher')
 
     if (savedFname) firstName.value = savedFname
     if (savedLname) lastName.value = savedLname
+    if (savedRole) isTeacher.value = JSON.parse(savedRole)
   }
 
   return {
     token,
     firstName,
     lastName,
+    isTeacher,
+    isLecturer,
     isAuthenticated,
     login,
     logout,

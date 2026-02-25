@@ -10,10 +10,21 @@
         </div>
         <div>
           <h5 class="mb-0 fw-bold">{{ authStore.firstName }} {{ authStore.lastName }}</h5>
-          <span class="badge bg-secondary">LECTURER</span>
+          <span class="badge" :class="authStore.isLecturer ? 'bg-secondary' : 'bg-info'">
+            {{ authStore.isLecturer ? 'LECTURER' : 'STUDENT' }}
+          </span>
         </div>
       </div>
-      <button @click="logout" class="btn btn-outline-danger btn-sm">Logout</button>
+      <div class="gap-2 d-flex">
+        <button
+          v-if="!authStore.isLecturer"
+          @click="router.push('/attendance-qr')"
+          class="btn btn-success btn-sm"
+        >
+          <i class="bi bi-qr-code me-1"></i> Register Attendance
+        </button>
+        <button @click="logout" class="btn btn-outline-danger btn-sm">Logout</button>
+      </div>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -59,7 +70,11 @@
         v-else-if="filteredSessions.length > 0"
         v-for="session in filteredSessions"
         :key="session.id"
-        @click="router.push(`/session/${session.id}`)"
+        @click="
+          authStore.isLecturer
+            ? router.push(`/session/${session.id}`)
+            : router.push(`/student-session/${session.id}`)
+        "
         class="list-group-item list-group-item-action p-3 border-start border-primary border-4 mb-1"
       >
         <div class="d-flex justify-content-between align-items-center">
@@ -141,7 +156,14 @@ const filteredSessions = computed(() => {
 const fetchSessions = async () => {
   loading.value = true
   try {
-    const { items } = (await api.courseTeacherSessionsGet({ pageNumber: 1, pageSize: 9999 })) as any
+    let res: any
+    if (authStore.isLecturer) {
+      res = await api.courseTeacherSessionsGet({ pageNumber: 1, pageSize: 9999 })
+    } else {
+      res = await api.courseStudentSessionsGet({ pageNumber: 1, pageSize: 9999 })
+    }
+
+    const { items } = res as any
 
     allSessions.value = (items || []).map((item: any) => ({
       id: item.courseSessionId,

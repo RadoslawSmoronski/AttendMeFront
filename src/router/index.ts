@@ -27,6 +27,12 @@ const router = createRouter({
       name: 'scanner',
       component: () => import('../views/ScannerView.vue'),
     },
+    {
+      path: '/register-device',
+      name: 'register-device',
+      component: () => import('../views/DeviceRegistrationView.vue'),
+      meta: { requiresAuth: false },
+    },
   ],
 })
 

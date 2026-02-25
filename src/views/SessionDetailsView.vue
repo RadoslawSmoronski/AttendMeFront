@@ -20,9 +20,15 @@
         </div>
       </div>
 
-      <button class="btn btn-primary shadow-sm" @click="goToQrScreen">
-        <i class="bi bi-qr-code-scan me-2"></i> Show QR
-      </button>
+      <div class="d-flex flex-column gap-2 align-items-end">
+        <button class="btn btn-primary shadow-sm w-100" @click="goToQrScreen">
+          <i class="bi bi-qr-code-scan me-2"></i> Show Scanner
+        </button>
+
+        <button @click="isRegModalOpen = true" class="btn btn-outline-primary btn-sm w-100">
+          <i class="bi bi-phone me-1"></i> Device Registration
+        </button>
+      </div>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -76,6 +82,8 @@
         </table>
       </div>
     </div>
+
+    <DeviceRegModal v-if="isRegModalOpen" :students="students" @close="isRegModalOpen = false" />
   </div>
 </template>
 
@@ -83,6 +91,9 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { api } from '@/api'
+import DeviceRegModal from '@/components/DeviceRegModal.vue'
+
+const isRegModalOpen = ref(false)
 
 const route = useRoute()
 const router = useRouter()

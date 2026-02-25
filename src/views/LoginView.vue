@@ -39,6 +39,19 @@
               Sign In
             </button>
           </div>
+
+          <template v-if="isDeviceRegistered">
+            <hr class="my-4 text-muted" />
+            <div class="d-grid gap-2">
+              <button
+                type="button"
+                @click="router.push('/attendance-qr')"
+                class="btn btn-outline-success"
+              >
+                <i class="bi bi-qr-code me-2"></i> Show Attendance QR
+              </button>
+            </div>
+          </template>
         </form>
       </div>
     </div>
@@ -46,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
@@ -57,6 +70,16 @@ const loginField = ref('')
 const passwordField = ref('')
 const errorMsg = ref('')
 const loading = ref(false)
+
+// Variable to control if the QR button should be visible
+const isDeviceRegistered = ref(false)
+
+// Check if device token exists when page loads
+onMounted(() => {
+  if (localStorage.getItem('device_token')) {
+    isDeviceRegistered.value = true
+  }
+})
 
 async function onLogin() {
   loading.value = true

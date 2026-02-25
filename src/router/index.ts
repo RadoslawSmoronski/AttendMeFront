@@ -33,6 +33,12 @@ const router = createRouter({
       component: () => import('../views/DeviceRegistrationView.vue'),
       meta: { requiresAuth: false },
     },
+    {
+      path: '/attendance-qr',
+      name: 'attendance-qr',
+      component: () => import('../views/AttendanceTicketView.vue'),
+      meta: { requiresAuth: false },
+    },
   ],
 })
 

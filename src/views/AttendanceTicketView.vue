@@ -1,39 +1,48 @@
 <template>
-  <div class="container d-flex justify-content-center align-items-center vh-100">
-    <div class="card shadow-sm text-center" style="max-width: 400px; width: 100%">
-      <div class="card-body p-4">
-        <h3 class="card-title mb-4">Attendance QR</h3>
+  <div class="container mt-4">
+    <Navbar v-if="authStore.isAuthenticated" />
+    <div class="container d-flex justify-content-center align-items-center">
+      <div class="card shadow-sm text-center mx-auto" style="max-width: 400px; width: 100%">
+        <div class="card-body p-4">
+          <h3 class="card-title mb-4">Attendance QR</h3>
 
-        <div v-if="!hasDeviceToken" class="alert alert-danger small">
-          Device is not registered. Please register your device using the link provided by your
-          teacher first.
-        </div>
-
-        <div v-else>
-          <div v-if="attendanceConfirmed" class="text-success py-4">
-            <i class="bi bi-check-circle-fill" style="font-size: 4rem"></i>
-            <h4 class="mt-3 fw-bold">Attendance Registered!</h4>
-            <p class="text-muted small">You can close this screen now.</p>
+          <div v-if="!hasDeviceToken" class="alert alert-danger small">
+            Device is not registered. Please register your device using the link provided by your
+            teacher first.
           </div>
 
           <div v-else>
-            <p class="text-muted small mb-4">
-              Bring your phone close to the teacher's camera to scan this code.
-            </p>
-
-            <div class="d-flex justify-content-center bg-light p-3 rounded mb-3">
-              <qrcode-vue v-if="ticketValue" :value="ticketValue" :size="200" level="M" />
-              <div v-else class="spinner-border text-primary m-5" role="status"></div>
+            <div v-if="attendanceConfirmed" class="text-success py-4">
+              <i class="bi bi-check-circle-fill" style="font-size: 4rem"></i>
+              <h4 class="mt-3 fw-bold">Attendance Registered!</h4>
+              <p class="text-muted small">You can close this screen now.</p>
             </div>
 
-            <p class="small text-muted mb-0">
-              <i class="bi bi-arrow-clockwise me-1"></i> Auto-refreshing every 2s...
-            </p>
-          </div>
-        </div>
+            <div v-else>
+              <p class="text-muted small mb-4">
+                Bring your phone close to the teacher's camera to scan this code.
+              </p>
 
-        <div class="d-grid gap-2 mt-4">
-          <button @click="router.push('/login')" class="btn btn-secondary">Back to Login</button>
+              <div class="d-flex justify-content-center bg-light p-3 rounded mb-3">
+                <qrcode-vue v-if="ticketValue" :value="ticketValue" :size="200" level="M" />
+                <div v-else class="spinner-border text-primary m-5" role="status"></div>
+              </div>
+
+              <p class="small text-muted mb-0">
+                <i class="bi bi-arrow-clockwise me-1"></i> Auto-refreshing every 2s...
+              </p>
+            </div>
+          </div>
+
+          <div class="d-grid gap-2 mt-4">
+            <button
+              v-if="!authStore.isAuthenticated"
+              @click="router.push('/login')"
+              class="btn btn-secondary"
+            >
+              Back to Login
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -41,12 +50,15 @@
 </template>
 
 <script setup lang="ts">
+import Navbar from '../components/NavbarView.vue'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { api } from '@/api'
+import { useAuthStore } from '../stores/auth'
+import { api } from '../api'
 import QrcodeVue from 'qrcode.vue' // Import QR code generator
 
 const router = useRouter()
+const authStore = useAuthStore()
 
 // State variables
 const hasDeviceToken = ref(false)

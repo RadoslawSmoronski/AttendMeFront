@@ -1,13 +1,8 @@
 <template>
   <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
+    <Navbar />
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-3">
       <div>
-        <button
-          @click="router.push('/')"
-          class="btn btn-link text-decoration-none text-muted p-0 mb-2"
-        >
-          <i class="bi bi-arrow-left me-1"></i> Back
-        </button>
         <h2 class="fw-bold mb-0 text-dark">{{ session?.courseName || 'Loading...' }}</h2>
         <div class="text-muted mt-1 small">
           <span class="me-3"
@@ -90,8 +85,9 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { api } from '@/api'
+import { api } from '../api'
 import DeviceRegModal from '@/components/DeviceRegModal.vue'
+import Navbar from '../components/NavbarView.vue'
 
 const isRegModalOpen = ref(false)
 

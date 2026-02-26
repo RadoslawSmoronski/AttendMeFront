@@ -1,32 +1,6 @@
 <template>
   <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom">
-      <div class="d-flex align-items-center">
-        <div
-          class="bg-primary text-white rounded-circle d-flex justify-content-center align-items-center me-3 user-select-none"
-          style="width: 48px; height: 48px; font-size: 1.2rem"
-        >
-          {{ initials }}
-        </div>
-        <div>
-          <h5 class="mb-0 fw-bold">{{ authStore.firstName }} {{ authStore.lastName }}</h5>
-          <span class="badge bg-info">STUDENT</span>
-        </div>
-      </div>
-      <div class="gap-2 d-flex">
-        <button @click="router.push('/')" class="btn btn-outline-secondary btn-sm">
-          <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
-        </button>
-        <button
-          v-if="!authStore.isLecturer"
-          @click="router.push('/attendance-qr')"
-          class="btn btn-success btn-sm"
-        >
-          <i class="bi bi-qr-code me-1"></i> Register Attendance
-        </button>
-        <button @click="logout" class="btn btn-outline-danger btn-sm">Logout</button>
-      </div>
-    </div>
+    <Navbar />
 
     <div v-if="loading" class="text-center p-5">
       <div class="spinner-border text-primary"></div>
@@ -115,10 +89,11 @@
 </template>
 
 <script setup lang="ts">
+import Navbar from '../components/NavbarView.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import { api } from '@/api'
+import { api } from '../api'
 
 const route = useRoute()
 const router = useRouter()

@@ -23,6 +23,12 @@ const router = createRouter({
       component: () => import('../views/SessionDetailsView.vue'),
     },
     {
+      // route now carries both course‑group and specific session id
+      path: '/student-session/:groupId/:sessionId?',
+      name: 'student-course-details',
+      component: () => import('../views/StudentCourseDetailsView.vue'),
+    },
+    {
       path: '/scanner/:id',
       name: 'scanner',
       component: () => import('../views/ScannerView.vue'),

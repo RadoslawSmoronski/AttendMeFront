@@ -73,7 +73,8 @@
         @click="
           authStore.isLecturer
             ? router.push(`/session/${session.id}`)
-            : router.push(`/student-session/${session.id}`)
+            : // student link needs both group and session ids
+              router.push(`/student-session/${session.groupId}/${session.sessionId}`)
         "
         class="list-group-item list-group-item-action p-3 border-start border-primary border-4 mb-1"
       >
@@ -104,11 +105,15 @@ import { useAuthStore } from '../stores/auth'
 import { api } from '@/api'
 
 interface SessionView {
+  // unique identifier used in links (group id for student view, session id for lecturer)
   id: number
   courseName: string
   groupName: string
   roomName: string
   startTime: string
+  // added for student routing
+  sessionId?: number
+  groupId?: number
 }
 
 const authStore = useAuthStore()
@@ -166,7 +171,11 @@ const fetchSessions = async () => {
     const { items } = res as any
 
     allSessions.value = (items || []).map((item: any) => ({
-      id: item.courseSessionId,
+      // keep both ids so student links can carry them
+      sessionId: item.courseSessionId,
+      groupId: item.courseGroupId,
+      // old `id` field is still used for route building and lecturer view
+      id: authStore.isLecturer ? item.courseSessionId : item.courseGroupId,
       courseName: item.courseName,
       groupName: item.courseGroupName,
       roomName: item.locationName,
